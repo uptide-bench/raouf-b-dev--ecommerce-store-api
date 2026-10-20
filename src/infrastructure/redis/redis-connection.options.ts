@@ -1,4 +1,9 @@
-import type { RedisClientOptions } from 'redis';
+import type {
+  RedisClientOptions,
+  RedisFunctions,
+  RedisModules,
+  RedisScripts,
+} from 'redis';
 import type { IAppConfig } from '../../config/configuration';
 
 export type RedisConfig = IAppConfig['redis'];
@@ -10,6 +15,22 @@ export type RedisConfig = IAppConfig['redis'];
  * - buildIoRedisConnection → BullMQ (via BULLMQ_CONNECTION_OPTIONS), FlowProducer, QueueEvents
  * - buildThrottlerIoRedisOptions → throttler storage (fail-fast retries; not shared with BullMQ)
  */
+
+/**
+ * Wire protocol for node-redis clients. node-redis 6 changed the default from
+ * RESP2 to RESP3; RESP3 changes reply shapes for FT.SEARCH / JSON.* and the
+ * pub/sub framing used by @socket.io/redis-adapter. Pinned to RESP2 to keep the
+ * reply shapes this codebase (and the Socket.IO adapter) was built against.
+ */
+export const NODE_REDIS_RESP_VERSION = 2;
+
+/** node-redis client options pinned to {@link NODE_REDIS_RESP_VERSION}. */
+export type NodeRedisClientOptions = RedisClientOptions<
+  RedisModules,
+  RedisFunctions,
+  RedisScripts,
+  typeof NODE_REDIS_RESP_VERSION
+>;
 
 /** Max reconnect delay shared by node-redis and ioredis clients. */
 export const REDIS_RECONNECT_MAX_MS = 10_000;
@@ -25,13 +46,14 @@ export function redisReconnectDelay(retries: number): number {
  */
 export function buildNodeRedisClientOptions(
   redis: RedisConfig,
-): RedisClientOptions {
+): NodeRedisClientOptions {
   const common = {
     host: redis.host,
     port: redis.port,
     reconnectStrategy: redisReconnectDelay,
   };
   return {
+    RESP: NODE_REDIS_RESP_VERSION,
     password: redis.password || undefined,
     database: redis.db,
     // Discriminated union: tls:true vs omitted/false (node-redis RedisSocketOptions).
