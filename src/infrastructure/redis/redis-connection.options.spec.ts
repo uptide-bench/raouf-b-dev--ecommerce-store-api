@@ -16,6 +16,7 @@ const baseRedis: RedisConfig = {
 describe('buildNodeRedisClientOptions', () => {
   it('uses discrete host/port without TLS by default', () => {
     expect(buildNodeRedisClientOptions(baseRedis)).toEqual({
+      RESP: 2,
       password: 's3cret!',
       database: 2,
       socket: {
@@ -33,6 +34,10 @@ describe('buildNodeRedisClientOptions', () => {
       port: 6380,
       tls: true,
     });
+  });
+
+  it('pins the wire protocol to RESP2 (node-redis 6 defaults to RESP3)', () => {
+    expect(buildNodeRedisClientOptions(baseRedis).RESP).toBe(2);
   });
 });
 

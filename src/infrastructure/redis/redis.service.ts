@@ -22,13 +22,17 @@ import {
   stripKeyPrefix,
   VERSIONED_SEARCH_INDEXES,
 } from './cache-key-space';
-import { buildNodeRedisClientOptions } from './redis-connection.options';
+import {
+  buildNodeRedisClientOptions,
+  NODE_REDIS_RESP_VERSION,
+} from './redis-connection.options';
 import { logRedisError } from './redis-error.utils';
 
 export type AppRedisClient = RedisClientType<
   RedisDefaultModules,
   RedisFunctions,
-  RedisScripts
+  RedisScripts,
+  typeof NODE_REDIS_RESP_VERSION
 >;
 
 @Injectable()
@@ -51,7 +55,7 @@ export class RedisService implements OnModuleInit, OnApplicationShutdown {
   async onModuleInit() {
     this.client = createClient(
       buildNodeRedisClientOptions(this.envConfigService.redis),
-    ) as AppRedisClient;
+    );
 
     this.client.on('error', (err: unknown) =>
       logRedisError(this.logger, 'Redis client', err),

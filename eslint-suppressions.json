@@ -17,6 +17,16 @@
       "count": 4
     }
   },
+  "src/infrastructure/health/indicators/websocket.health-indicator.ts": {
+    "@typescript-eslint/no-explicit-any": {
+      "count": 1
+    }
+  },
+  "src/infrastructure/health/testing/mocks/health.mock.ts": {
+    "@typescript-eslint/consistent-type-assertions": {
+      "count": 10
+    }
+  },
   "src/infrastructure/idempotency/idempotency.service.ts": {
     "@typescript-eslint/consistent-type-assertions": {
       "count": 1
@@ -54,7 +64,7 @@
   },
   "src/infrastructure/redis/redis.service.ts": {
     "@typescript-eslint/consistent-type-assertions": {
-      "count": 3
+      "count": 2
     }
   },
   "src/infrastructure/shutdown/shutdown.service.spec.ts": {
@@ -151,16 +161,6 @@
   "src/modules/carts/testing/factories/cart-entity.factory.ts": {
     "@typescript-eslint/consistent-type-assertions": {
       "count": 2
-    }
-  },
-  "src/infrastructure/health/indicators/websocket.health-indicator.ts": {
-    "@typescript-eslint/no-explicit-any": {
-      "count": 1
-    }
-  },
-  "src/infrastructure/health/testing/mocks/health.mock.ts": {
-    "@typescript-eslint/consistent-type-assertions": {
-      "count": 10
     }
   },
   "src/modules/identity/primary-adapters/decorators/current-user.decorator.spec.ts": {
